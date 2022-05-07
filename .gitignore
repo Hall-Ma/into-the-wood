@@ -6,3 +6,4 @@ frontend/.idea
 frontend/.dart_tool
 frontend/build
 __pycache__/
+.DS_Store
