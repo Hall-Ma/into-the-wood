@@ -4,7 +4,7 @@ import cv2
 import pickle
 
 data_dir = './data/trees'
-categories = ['acer', 'alder', 'ash', 'beech', 'birch', 'douglas_fir', 'oak', 'pine', 'spruce', 'yew']
+categories = ['acer', 'alder', 'ash', 'beech', 'birch', 'oak']
 data = []
 
 
@@ -55,5 +55,4 @@ def load_data():
 
     return [feature, labels]
 
-
-make_data()
+# make_data()

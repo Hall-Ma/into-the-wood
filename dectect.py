@@ -4,9 +4,9 @@ import tensorflow as tf
 from keras.preprocessing import image
 from sklearn.model_selection import train_test_split
 
-from utils import load_data
+#from utils import load_data
 
-categories = ['acer', 'alder', 'ash', 'beech', 'birch', 'douglas_fir', 'oak', 'pine', 'spruce', 'yew']
+categories = ['acer', 'alder', 'ash', 'beech', 'birch', 'oak']
 
 
 def show_result():
@@ -41,7 +41,7 @@ def show_result():
 
 
 def load_image(img_path, show=False):
-    img = image.load_img(img_path, target_size=(224, 224))
+    img = image.load_img(img_path, target_size=(256, 256))
     img_tensor = image.img_to_array(img)  # (height, width, channels)
     img_tensor = np.expand_dims(img_tensor,
                                 axis=0)  # (1, height, width, channels), add a dimension because the model expects this shape: (batch_size, height, width, channels)
@@ -57,7 +57,7 @@ def load_image(img_path, show=False):
 
 def show_classification(img_path):
     # load model
-    model = tf.keras.models.load_model('mymodel.h5')
+    model = tf.keras.models.load_model('newModel.h5')
 
     # load a single image
     new_image = load_image(img_path, True)
@@ -67,6 +67,7 @@ def show_classification(img_path):
     print(categories[np.argmax(pred)])
 
 
-show_result()
+#show_result()
 show_classification("oak_example.jpg")
 show_classification("oak_example_1.jpg")
+show_classification("eiche_3.png")
