@@ -1,6 +1,8 @@
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
+from keras.models import Sequential
+from tensorflow.keras import layers
 
 data_dir = './data/trees'
 
