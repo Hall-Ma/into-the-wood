@@ -36,26 +36,29 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF101010),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(40.0), // here the desired height
+          child: AppBar(
+            title: Text('IntoTheWood'),
+            backgroundColor: Color(0xFF00E98C),
+          )),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 24),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/wald.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           children: <Widget>[
-            SizedBox(
-              height: 100,
-            ),
-            Text(
-              'Sample Text',
-              style: TextStyle(color: Color(0xFFEEDA28), fontSize: 15),
-            ),
-            SizedBox(height: 6),
-            Text(
-              'Plants',
-              style: TextStyle(
-                  color: Color(0xFFE99600),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 28),
-            ),
+            // SizedBox(height: 6,),
+            // Text(
+            //   'Plants',
+            //   style: TextStyle(
+            //       color: Color(0xFF00E98C),
+            //       fontWeight: FontWeight.w500,
+            //       fontSize: 28),
+            // ),
             SizedBox(height: 5),
             // Center(
             //   child: Container(
@@ -80,7 +83,7 @@ class _HomeState extends State<Home> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 24, vertical: 17),
                       decoration: BoxDecoration(
-                          color: Color(0xFFE99600),
+                          color: Color(0xFF00E98C),
                           borderRadius: BorderRadius.circular(6)),
                       child: Text(
                         'Take a photo',
@@ -96,7 +99,7 @@ class _HomeState extends State<Home> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 24, vertical: 17),
                       decoration: BoxDecoration(
-                          color: Color(0xFFE99600),
+                          color: Color(0xFF00E98C),
                           borderRadius: BorderRadius.circular(6)),
                       child: Text(
                         'Camera Roll',
