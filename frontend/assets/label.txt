@@ -1,0 +1,8 @@
+Ahorn
+Birke
+Eiche
+Hainbuche
+Kastanie
+Linde
+
+
