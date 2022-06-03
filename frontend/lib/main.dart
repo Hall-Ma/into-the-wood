@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
+import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 
 void main() => runApp(MaterialApp(
   home: ImageDetectApp(),
@@ -51,15 +52,22 @@ class _ImageDetectState extends State<ImageDetectApp> {
   void _imageSelection() async {
    // File f = await getImageFileFromAssets('oak_example.jpg');
 
-    Image b = Image.file(File("C:\\Users\\Phil\\AndroidStudioProjects\\into-the-wood\\oak_example.jpg")) ;
+    //Image b = Image.file(File("C:\\Users\\Phil\\AndroidStudioProjects\\into-the-wood\\oak_example.jpg")) ;
     //_imageFile.file(new File("oak_example.jpg"));
     //var imageFile =  await imageFile.copy('../oak_example.jpg');
-  // var imageFile = await ImagePicker().getImage(source: ImageSource.gallery);
+   var imageFile = await ImagePicker().getImage(source: ImageSource.gallery);
     setState(() {
       _loading = true;
-      _imageFile =b as PickedFile?;
+      _imageFile = imageFile;
     });
-    _imageClassification(_imageFile!);
+
+   ImageProcessor imageProcessor = ImageProcessorBuilder()
+       .add(ResizeOp(224, 224, ResizeMethod.NEAREST_NEIGHBOUR))
+       .build();
+
+   TensorImage tensorImage = TensorImage.fromImage();
+
+    _imageClassification(imageFile!);
   }
 
   void _imageClassification(PickedFile image) async {

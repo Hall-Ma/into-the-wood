@@ -33,6 +33,7 @@ dependencies:
   splashscreen:
   tflite: 1.1.2
   path_provider: ^2.0.10
+  tflite_flutter_helper: ^0.3.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
