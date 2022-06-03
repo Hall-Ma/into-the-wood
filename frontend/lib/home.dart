@@ -39,55 +39,36 @@ class _HomeState extends State<Home> {
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(40.0), // here the desired height
           child: AppBar(
+            centerTitle: true,
             title: Text('IntoTheWood'),
-            backgroundColor: Color(0xFF00E98C),
+            backgroundColor: Color(0xFF255B45),
           )),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/wald.jpg'),
+            image: AssetImage('assets/WaldZukunft.jpg'),
             fit: BoxFit.cover,
           ),
         ),
         child: Column(
           children: <Widget>[
-            // SizedBox(height: 6,),
-            // Text(
-            //   'Plants',
-            //   style: TextStyle(
-            //       color: Color(0xFF00E98C),
-            //       fontWeight: FontWeight.w500,
-            //       fontSize: 28),
-            // ),
-            SizedBox(height: 5),
-            // Center(
-            //   child: Container(
-            //     width: 300,
-            //     child: Column(
-            //       children: <Widget>[
-            //         Image.asset('assets/sampleLogo.jpeg'),
-            //         SizedBox(height: 10)
-            //       ],
-            //     ),
-            //   ),
-            // ),
             Container(
               width: MediaQuery.of(context).size.width,
-              child: Column(
+              child: Row(
                 children: <Widget>[
                   GestureDetector(
                     onTap: takeImage,
                     child: Container(
                       width: MediaQuery.of(context).size.width - 260,
-                      alignment: Alignment.center,
+                      alignment: Alignment.bottomCenter,
                       padding:
-                          EdgeInsets.symmetric(horizontal: 24, vertical: 17),
+                      EdgeInsets.symmetric(horizontal: 24, vertical: 17),
                       decoration: BoxDecoration(
-                          color: Color(0xFF00E98C),
-                          borderRadius: BorderRadius.circular(6)),
+                          color: Color(0xFF255B45),
+                          borderRadius: BorderRadius.circular(10)),
                       child: Text(
                         'Take a photo',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white, fontSize: 17),
                       ),
                     ),
                   ),
@@ -95,15 +76,16 @@ class _HomeState extends State<Home> {
                     onTap: pickImage,
                     child: Container(
                       width: MediaQuery.of(context).size.width - 260,
-                      alignment: Alignment.center,
+                      alignment: Alignment.bottomCenter,
+                      margin: EdgeInsets.symmetric(horizontal: 24, vertical: 17),
                       padding:
-                          EdgeInsets.symmetric(horizontal: 24, vertical: 17),
+                      EdgeInsets.symmetric(horizontal: 24, vertical: 17),
                       decoration: BoxDecoration(
-                          color: Color(0xFF00E98C),
-                          borderRadius: BorderRadius.circular(6)),
+                          color: Color(0xFF255B45),
+                          borderRadius: BorderRadius.circular(10)),
                       child: Text(
                         'Camera Roll',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white, fontSize: 17),
                       ),
                     ),
                   )
@@ -114,5 +96,6 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+
   }
 }
