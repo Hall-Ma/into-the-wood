@@ -61,13 +61,8 @@ class _ImageDetectState extends State<ImageDetectApp> {
       _imageFile = imageFile;
     });
 
-   ImageProcessor imageProcessor = ImageProcessorBuilder()
-       .add(ResizeOp(224, 224, ResizeMethod.NEAREST_NEIGHBOUR))
-       .build();
-
-   TensorImage tensorImage = TensorImage.fromImage();
-
     _imageClassification(imageFile!);
+
   }
 
   void _imageClassification(PickedFile image) async {
