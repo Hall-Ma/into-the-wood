@@ -1,3 +1,9 @@
 # it's over 1 GB
 data.pickle
 mymodel.h5
+.idea/
+frontend/.idea
+frontend/.dart_tool
+frontend/build
+__pycache__/
+.DS_Store
