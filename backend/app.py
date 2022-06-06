@@ -21,21 +21,26 @@ def upload():
         imagefile = request.files['file']
         path = os.path.join(os.getcwd() + '\\uploades\\' + imagefile.filename)
         imagefile.save(path)
-        classes = identifyImage(path)
+        prediction = identifyImage(path)
         return jsonify({"message": "Image uploaded!",
-                        "upload_time": datetime.now()})
+                        "upload_time": datetime.now(),
+                        "prediction": prediction
+                        })
 
 
 def identifyImage(img_path):
+    class_names = ['Ahorn', 'Birke', 'Eiche', 'Hainbuche', 'Kastanie', 'Linde']
     image = img.load_img(img_path, target_size=(224, 224))
     x = img_to_array(image)
     x = np.expand_dims(x, axis=0)
-    # images = np.vstack([x])
     x = preprocess_input(x)
     preds = model.predict(x)
-    preds = decode_predictions(preds, top=1)
-    print(preds)
-    return preds
+    predicted_percentage = round(100 * np.max(preds),2)
+    predicted_tree_name = class_names[np.argmax(preds[0], axis=-1)]
+    return {
+        "predicted tree": predicted_tree_name,
+        "predicted_percentage": str(predicted_percentage)
+    }
 
 
 if __name__ == '__main__':
