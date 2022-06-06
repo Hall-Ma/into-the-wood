@@ -22,6 +22,7 @@ def upload():
         path = os.path.join(os.getcwd() + '\\uploades\\' + imagefile.filename)
         imagefile.save(path)
         prediction = identifyImage(path)
+        os.remove(path)
         return jsonify({"message": "Image uploaded!",
                         "upload_time": datetime.now(),
                         "prediction": prediction

@@ -40,19 +40,14 @@ class _UploadState extends State<Upload> {
     var stream =
         new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
     var length = await imageFile.length();
-    print(length);
 
     var uri = Uri.parse("http://192.168.178.33:5000/uploades");
-    print(uri);
     var request = new http.MultipartRequest("POST", uri);
-    print(request);
     var multipartFile = new http.MultipartFile('file', stream, length,
         filename: basename(imageFile.path));
-    print(multipartFile);
     request.files.add(multipartFile);
 
     var response = await request.send();
-    print(response.statusCode);
     response.stream.transform(utf8.decoder).listen((value) {
       print(value);
     });
