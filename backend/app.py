@@ -1,0 +1,42 @@
+import os
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image as img
+from tensorflow.keras.utils import img_to_array
+from keras import backend as k
+import numpy as np
+import tensorflow as tf
+from PIL import Image
+from datetime import datetime
+from tensorflow.keras.applications.resnet50 import ResNet50, decode_predictions, preprocess_input
+from flask import Flask, Blueprint, request, render_template, jsonify
+
+model = load_model("resNet50_16_batches_best.h5")
+
+app = Flask(__name__)
+
+
+@app.route('/uploades', methods=["GET", "POST"])
+def upload():
+    if (request.method == "POST"):
+        imagefile = request.files['file']
+        path = os.path.join(os.getcwd() + '\\uploades\\' + imagefile.filename)
+        imagefile.save(path)
+        classes = identifyImage(path)
+        return jsonify({"message": "Image uploaded!",
+                        "upload_time": datetime.now()})
+
+
+def identifyImage(img_path):
+    image = img.load_img(img_path, target_size=(224, 224))
+    x = img_to_array(image)
+    x = np.expand_dims(x, axis=0)
+    # images = np.vstack([x])
+    x = preprocess_input(x)
+    preds = model.predict(x)
+    preds = decode_predictions(preds, top=1)
+    print(preds)
+    return preds
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')

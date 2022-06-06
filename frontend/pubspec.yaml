@@ -31,9 +31,9 @@ dependencies:
     sdk: flutter
   image_picker: 0.8.5
   splashscreen:
-  tflite: 1.1.2
+  http: 0.13.4
   path_provider: ^2.0.10
-  tflite_flutter_helper: ^0.3.1
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

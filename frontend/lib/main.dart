@@ -1,24 +1,22 @@
-import 'dart:async';
-import 'dart:io';
+import 'dart:convert';
+
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:tflite/tflite.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:path_provider/path_provider.dart';
-import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 
 void main() => runApp(MaterialApp(
-  home: ImageDetectApp(),
-));
+      home: Upload(),
+    ));
 
-class ImageDetectApp extends StatefulWidget {
+class Upload extends StatefulWidget {
   @override
-  _ImageDetectState createState() => _ImageDetectState();
+  _UploadState createState() => _UploadState();
 }
 
-class _ImageDetectState extends State<ImageDetectApp> {
-  List? _listResult;
+class _UploadState extends State<Upload> {
   PickedFile? _imageFile;
   bool _loading = false;
 
@@ -26,64 +24,38 @@ class _ImageDetectState extends State<ImageDetectApp> {
   void initState() {
     super.initState();
     _loading = true;
-    _loadModel();
-  }
-
-  void _loadModel() async {
-    await Tflite.loadModel(
-      model: "assets/model.tflite",
-      labels: "assets/label.txt",
-    ).then((value) {
-      setState(() {
-        _loading = false;
-      });
-    });
-  }
-
-  Future<File> getImageFileFromAssets(String path) async {
-    final byteData = await rootBundle.load('../assets/$path');
-
-    final file = File('${(await getTemporaryDirectory()).path}/$path');
-    await file.writeAsBytes(byteData.buffer.asUint8List(
-        byteData.offsetInBytes, byteData.lengthInBytes));
-    return file;
   }
 
   void _imageSelection() async {
-   // File f = await getImageFileFromAssets('oak_example.jpg');
-
-    //Image b = Image.file(File("C:\\Users\\Phil\\AndroidStudioProjects\\into-the-wood\\oak_example.jpg")) ;
-    //_imageFile.file(new File("oak_example.jpg"));
-    //var imageFile =  await imageFile.copy('../oak_example.jpg');
-   var imageFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    var imageFile = await ImagePicker().getImage(source: ImageSource.gallery);
     setState(() {
       _loading = true;
       _imageFile = imageFile;
     });
 
-    _imageClassification(imageFile!);
-
+    uploadImageToServer(File(imageFile!.path));
   }
 
-  void _imageClassification(PickedFile image) async {
-    print('in classfication');
-    var output = await Tflite.runModelOnImage(
-      path: image.path,
-      numResults: 2,
-      threshold: 0.5,
-      imageMean: 127.5,
-      imageStd: 127.5,
-    );
-    setState(() {
-      _loading = false;
-      _listResult = output;
+  uploadImageToServer(File imageFile) async {
+    var stream =
+        new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    var length = await imageFile.length();
+    print(length);
+
+    var uri = Uri.parse("http://192.168.178.33:5000/uploades");
+    print(uri);
+    var request = new http.MultipartRequest("POST", uri);
+    print(request);
+    var multipartFile = new http.MultipartFile('file', stream, length,
+        filename: basename(imageFile.path));
+    print(multipartFile);
+    request.files.add(multipartFile);
+
+    var response = await request.send();
+    print(response.statusCode);
+    response.stream.transform(utf8.decoder).listen((value) {
+      print(value);
     });
-  }
-
-  @override
-  void dispose() {
-    Tflite.close();
-    super.dispose();
   }
 
   @override
@@ -92,20 +64,6 @@ class _ImageDetectState extends State<ImageDetectApp> {
         floatingActionButton: FloatingActionButton(
             onPressed: _imageSelection,
             backgroundColor: Colors.blue,
-            child: Icon(Icons.add_photo_alternate_outlined)
-        )
-    );
+            child: Icon(Icons.add_photo_alternate_outlined)));
   }
-
-
-
-
-/*  Widget build(BuildContext context) {
-    floatingActionButton: FloatingActionButton(
-        onPressed: _imageSelection,
-        backgroundColor: Colors.blue,
-        child: Icon(Icons.add_photo_alternate_outlined)
-);
-    throw UnimplementedError();
-  }*/
 }
