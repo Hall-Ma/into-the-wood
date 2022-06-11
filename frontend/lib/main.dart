@@ -17,8 +17,10 @@ class Upload extends StatefulWidget {
 }
 
 class _UploadState extends State<Upload> {
-  PickedFile? _imageFile;
+  File? _imageFile;
   bool _loading = false;
+  var resJson;
+  var percentage;
 
   @override
   void initState() {
@@ -30,7 +32,7 @@ class _UploadState extends State<Upload> {
     var imageFile = await ImagePicker().getImage(source: ImageSource.gallery);
     setState(() {
       _loading = true;
-      _imageFile = imageFile;
+      _imageFile = File(imageFile!.path);
     });
 
     uploadImageToServer(File(imageFile!.path));
@@ -40,7 +42,7 @@ class _UploadState extends State<Upload> {
     var imageFile = await ImagePicker().getImage(source: ImageSource.camera);
     setState(() {
       _loading = true;
-      _imageFile = imageFile;
+      _imageFile = File(imageFile!.path);
     });
 
     uploadImageToServer(File(imageFile!.path));
@@ -57,10 +59,31 @@ class _UploadState extends State<Upload> {
         filename: basename(imageFile.path));
     request.files.add(multipartFile);
 
-    var response = await request.send();
-    response.stream.transform(utf8.decoder).listen((value) {
-      print(value);
+    var res = await request.send();
+    http.Response response = await http.Response.fromStream(res);
+    setState(() {
+      resJson = jsonDecode(response.body);
+      percentage = double.parse(resJson["prediction"]["predicted_percentage"]);
     });
+    print(resJson.runtimeType);
+  }
+
+  String getPredictionText(double percentage) {
+    if (resJson == null) {
+      return "Please select an Image!";
+    } else if (resJson != null && percentage < 50) {
+      return "Object can't be recognized. Please choose a different picture and try again!";
+    } else if (resJson != null && percentage >= 50 && percentage < 80) {
+      return "With a percentage of " +
+          resJson["prediction"]["predicted_percentage"] +
+          "% this might be a " +
+          resJson["prediction"]["predicted tree"];
+    } else {
+      return "With a percentage of " +
+          resJson["prediction"]["predicted_percentage"] +
+          "% this is a " +
+          resJson["prediction"]["predicted tree"];
+    }
   }
 
   @override
@@ -75,16 +98,35 @@ class _UploadState extends State<Upload> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 /*2*/
+                _imageFile == null
+                    ? Container(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.asset(
+                            'assets/logo.png',
+                            width: 250,
+                            height: 250,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.file(
+                            _imageFile!,
+                            width: 250,
+                            height: 250,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                 Container(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.asset(
-                      'assets/logo.png',
-                      width: 250,
-                      height: 250,
-                    ),
-                  ),
+                  child: Text(getPredictionText(double.parse(
+                      resJson["prediction"]["predicted_percentage"])),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 17, color: Color(0xFF28CC9E)),),
                 ),
               ],
             ),
@@ -94,34 +136,34 @@ class _UploadState extends State<Upload> {
       ),
     );
 
-    Widget predictedImage = Container(
-      padding: const EdgeInsets.all(50),
-      child: Row(
-        children: [
-          Expanded(
-            /*1*/
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                /*2*/
-                Container(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.asset(
-                      'assets/logo.png',
-                      width: 250,
-                      height: 250,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          /*3*/
-        ],
-      ),
-    );
+    // Widget predictedImage = Container(
+    //   padding: const EdgeInsets.all(50),
+    //   child: Row(
+    //     children: [
+    //       Expanded(
+    //         /*1*/
+    //         child: Column(
+    //           crossAxisAlignment: CrossAxisAlignment.center,
+    //           children: [
+    //             /*2*/
+    //             Container(
+    //               padding: const EdgeInsets.only(bottom: 8),
+    //               child: ClipRRect(
+    //                 borderRadius: BorderRadius.circular(20),
+    //                 child: Image.asset(
+    //                   'assets/logo.png',
+    //                   width: 250,
+    //                   height: 250,
+    //                 ),
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //       /*3*/
+    //     ],
+    //   ),
+    // );
 
     Widget buttonSection = Container(
       child: Row(
@@ -136,6 +178,7 @@ class _UploadState extends State<Upload> {
     return MaterialApp(
       title: 'Flutter layout demo',
       home: Scaffold(
+        backgroundColor: Color(0xFFF1F1F1),
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(40.0), // here the desired height
             child: AppBar(
@@ -152,7 +195,6 @@ class _UploadState extends State<Upload> {
               fit: BoxFit.cover,
             ),
             titleSection,
-            predictedImage,
             buttonSection,
           ],
         ),

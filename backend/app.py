@@ -23,14 +23,13 @@ def upload():
         imagefile.save(path)
         prediction = identifyImage(path)
         os.remove(path)
-        return jsonify({"message": "Image uploaded!",
-                        "upload_time": datetime.now(),
+        return jsonify({
                         "prediction": prediction
                         })
 
 
 def identifyImage(img_path):
-    class_names = ['Ahorn', 'Birke', 'Eiche', 'Hainbuche', 'Kastanie', 'Linde']
+    class_names = ['Maple', 'Birch', 'Oak', 'Hornbeam', 'Chestnut', 'Limewood']
     image = img.load_img(img_path, target_size=(224, 224))
     x = img_to_array(image)
     x = np.expand_dims(x, axis=0)
