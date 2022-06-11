@@ -69,20 +69,18 @@ class _UploadState extends State<Upload> {
   }
 
   String getPredictionText(double percentage) {
-    if (resJson == null) {
-      return "Please select an Image!";
-    } else if (resJson != null && percentage < 50) {
+    if (resJson != null && percentage < 50) {
       return "Object can't be recognized. Please choose a different picture and try again!";
     } else if (resJson != null && percentage >= 50 && percentage < 80) {
       return "With a percentage of " +
           resJson["prediction"]["predicted_percentage"] +
           "% this might be a " +
-          resJson["prediction"]["predicted tree"];
+          resJson["prediction"]["predicted tree"] + " tree";
     } else {
       return "With a percentage of " +
           resJson["prediction"]["predicted_percentage"] +
           "% this is a " +
-          resJson["prediction"]["predicted tree"];
+          resJson["prediction"]["predicted tree"] + " tree";
     }
   }
 
@@ -102,7 +100,7 @@ class _UploadState extends State<Upload> {
                     ? Container(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(10),
                           child: Image.asset(
                             'assets/logo.png',
                             width: 250,
@@ -111,9 +109,16 @@ class _UploadState extends State<Upload> {
                         ),
                       )
                     : Container(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: ClipRRect(
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            width: 8,
+                            color: Color(0xFF135644),
+                          ),
+                        ),
+                        margin: const EdgeInsets.only(bottom: 8),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
                           child: Image.file(
                             _imageFile!,
                             width: 250,
@@ -122,12 +127,26 @@ class _UploadState extends State<Upload> {
                           ),
                         ),
                       ),
-                Container(
-                  child: Text(getPredictionText(double.parse(
-                      resJson["prediction"]["predicted_percentage"])),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 17, color: Color(0xFF28CC9E)),),
-                ),
+                resJson != null
+                    ? Container(
+                        margin: const EdgeInsets.only(top: 12),
+                        child: Text(
+                          getPredictionText(double.parse(
+                              resJson["prediction"]["predicted_percentage"])),
+                          textAlign: TextAlign.center,
+                          style:
+                              TextStyle(fontSize: 17, color: Color(0xFF135644)),
+                        ),
+                      )
+                    : Container(
+                        margin: const EdgeInsets.only(top: 12),
+                        child: Text(
+                          "Please select an Image!",
+                          textAlign: TextAlign.center,
+                          style:
+                              TextStyle(fontSize: 17, color: Color(0xFF135644)),
+                        ),
+                      ),
               ],
             ),
           ),
@@ -135,35 +154,6 @@ class _UploadState extends State<Upload> {
         ],
       ),
     );
-
-    // Widget predictedImage = Container(
-    //   padding: const EdgeInsets.all(50),
-    //   child: Row(
-    //     children: [
-    //       Expanded(
-    //         /*1*/
-    //         child: Column(
-    //           crossAxisAlignment: CrossAxisAlignment.center,
-    //           children: [
-    //             /*2*/
-    //             Container(
-    //               padding: const EdgeInsets.only(bottom: 8),
-    //               child: ClipRRect(
-    //                 borderRadius: BorderRadius.circular(20),
-    //                 child: Image.asset(
-    //                   'assets/logo.png',
-    //                   width: 250,
-    //                   height: 250,
-    //                 ),
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //       /*3*/
-    //     ],
-    //   ),
-    // );
 
     Widget buttonSection = Container(
       child: Row(
@@ -178,13 +168,13 @@ class _UploadState extends State<Upload> {
     return MaterialApp(
       title: 'Flutter layout demo',
       home: Scaffold(
-        backgroundColor: Color(0xFFF1F1F1),
+        backgroundColor: Color(0xFFDDFEE4),
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(40.0), // here the desired height
             child: AppBar(
               centerTitle: true,
               title: Text('IntoTheWood'),
-              backgroundColor: Color(0xFF28CC9E),
+              backgroundColor: Color(0xFF135644),
             )),
         body: ListView(
           children: [
@@ -203,7 +193,7 @@ class _UploadState extends State<Upload> {
   }
 
   buildButtonColumn(icon, label, onTap) {
-    Color color = Color(0xFF28CC9E);
+    Color color = Color(0xFF135644);
     return GestureDetector(
       onTap: onTap,
       child: Column(
