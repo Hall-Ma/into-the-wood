@@ -70,24 +70,22 @@ class _UploadState extends State<Upload> {
 
   String getPredictionText(double percentage) {
     if (resJson != null && percentage < 50) {
-      return "Object can't be recognized. Please choose a different picture and try again!";
+      return "Oops, I think you have caught an unknown species but you can try again!";
     } else if (resJson != null && percentage >= 50 && percentage < 80) {
-      return "With a percentage of " +
-          resJson["prediction"]["predicted_percentage"] +
-          "% this might be a " +
-          resJson["prediction"]["predicted tree"] + " tree";
+      return "Hmm, I'm not sure but this could be a leaf from a " +
+          resJson["prediction"]["predicted tree"] +
+          " tree!";
     } else {
-      return "With a percentage of " +
-          resJson["prediction"]["predicted_percentage"] +
-          "% this is a " +
-          resJson["prediction"]["predicted tree"] + " tree";
+      return "Cool, I think you caught a leaf from a " +
+          resJson["prediction"]["predicted tree"] +
+          " tree!";
     }
   }
 
   @override
   Widget build(BuildContext context) {
     Widget titleSection = Container(
-      padding: const EdgeInsets.all(50),
+      padding: const EdgeInsets.all(25),
       child: Row(
         children: [
           Expanded(
@@ -113,7 +111,7 @@ class _UploadState extends State<Upload> {
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                             width: 8,
-                            color: Color(0xFF135644),
+                            color: Color(0xFF0C9BA8),
                           ),
                         ),
                         margin: const EdgeInsets.only(bottom: 8),
@@ -135,18 +133,29 @@ class _UploadState extends State<Upload> {
                               resJson["prediction"]["predicted_percentage"])),
                           textAlign: TextAlign.center,
                           style:
-                              TextStyle(fontSize: 17, color: Color(0xFF135644)),
+                              TextStyle(fontSize: 17, color: Color(0xFF0A7A81)),
                         ),
                       )
                     : Container(
                         margin: const EdgeInsets.only(top: 12),
                         child: Text(
-                          "Please select an Image!",
+                          "What's in your net?",
                           textAlign: TextAlign.center,
                           style:
-                              TextStyle(fontSize: 17, color: Color(0xFF135644)),
+                              TextStyle(fontSize: 17, color: Color(0xFF0A7A81)),
                         ),
                       ),
+                resJson != null && percentage >= 50
+                    ? Container(
+                        child: ElevatedButton(
+                          onPressed: null,
+                          child: const Text('Learn More'),
+                        ),
+                      )
+                    : Container(
+                  width: 40,
+                  height: 40,
+                ),
               ],
             ),
           ),
@@ -166,22 +175,23 @@ class _UploadState extends State<Upload> {
     );
 
     return MaterialApp(
-      title: 'Flutter layout demo',
+      debugShowCheckedModeBanner: true,
+      title: 'IntoTheWood',
       home: Scaffold(
-        backgroundColor: Color(0xFFDDFEE4),
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(40.0), // here the desired height
-            child: AppBar(
-              centerTitle: true,
-              title: Text('IntoTheWood'),
-              backgroundColor: Color(0xFF135644),
-            )),
+        backgroundColor: Color(0xFFBBEBFF),
+        // appBar: PreferredSize(
+        //     preferredSize: Size.fromHeight(40.0), // here the desired height
+        //     child: AppBar(
+        //       centerTitle: true,
+        //       title: Text('IntoTheWood'),
+        //       backgroundColor: Color(0xFF135644),
+        //     )),
         body: ListView(
           children: [
             Image.asset(
               'assets/WaldZukunft.jpg',
               width: 600,
-              height: 170,
+              height: 220,
               fit: BoxFit.cover,
             ),
             titleSection,
@@ -193,7 +203,7 @@ class _UploadState extends State<Upload> {
   }
 
   buildButtonColumn(icon, label, onTap) {
-    Color color = Color(0xFF135644);
+    Color color = Color(0xFF0A7A81);
     return GestureDetector(
       onTap: onTap,
       child: Column(
