@@ -29,7 +29,7 @@ def upload():
 
 
 def identifyImage(img_path):
-    class_names = ['Maple', 'Birch', 'Oak', 'Hornbeam', 'Chestnut', 'Limewood']
+    class_names = ['Maple', 'Birch', 'Oak', 'Hornbeam', 'Chestnut', 'Linden']
     image = img.load_img(img_path, target_size=(224, 224))
     x = img_to_array(image)
     x = np.expand_dims(x, axis=0)

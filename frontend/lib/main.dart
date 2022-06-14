@@ -1,11 +1,11 @@
 import 'dart:convert';
-
-import 'package:async/async.dart';
 import 'package:flutter/material.dart';
+import 'package:async/async.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 void main() => runApp(MaterialApp(
       home: Upload(),
@@ -82,6 +82,13 @@ class _UploadState extends State<Upload> {
     }
   }
 
+  launchWiki(String tree) async {
+    var url = 'https://en.wikipedia.org/wiki/' + tree ;
+
+       await launchUrlString(url);
+
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget titleSection = Container(
@@ -148,14 +155,16 @@ class _UploadState extends State<Upload> {
                 resJson != null && percentage >= 50
                     ? Container(
                         child: ElevatedButton(
-                          onPressed: null,
+                          onPressed: () => launchWiki(resJson["prediction"]["predicted tree"]),
+                          style: ElevatedButton.styleFrom(
+                              primary: Color(0xFF0A7A81)),
                           child: const Text('Learn More'),
                         ),
                       )
                     : Container(
-                  width: 40,
-                  height: 40,
-                ),
+                        width: 40,
+                        height: 40,
+                      ),
               ],
             ),
           ),
