@@ -4,7 +4,7 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image as img
 from tensorflow.keras.utils import img_to_array
-from tensorflow.keras.applications.resnet50 import ResNet50, preprocess_input
+from tensorflow.keras.applications.resnet50 import preprocess_input
 import numpy as np
 from flask import Flask, request, jsonify, render_template
 from PIL import Image
