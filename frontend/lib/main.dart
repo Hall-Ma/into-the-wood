@@ -53,7 +53,7 @@ class _UploadState extends State<Upload> {
         new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
     var length = await imageFile.length();
 
-    var uri = Uri.parse("http://192.168.178.33:5000/uploades");
+    var uri = Uri.parse("https://intothewood.herokuapp.com/");
     var request = new http.MultipartRequest("POST", uri);
     var multipartFile = new http.MultipartFile('file', stream, length,
         filename: basename(imageFile.path));
