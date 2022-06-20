@@ -25,11 +25,11 @@ class _UploadState extends State<Upload> {
   @override
   void initState() {
     super.initState();
-    _loading = true;
+    _loading = false;
   }
 
   void _imageSelection() async {
-    var imageFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    var imageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
       _loading = true;
       _imageFile = File(imageFile!.path);
@@ -39,7 +39,7 @@ class _UploadState extends State<Upload> {
   }
 
   void _takeImage() async {
-    var imageFile = await ImagePicker().getImage(source: ImageSource.camera);
+    var imageFile = await ImagePicker().pickImage(source: ImageSource.camera);
     setState(() {
       _loading = true;
       _imageFile = File(imageFile!.path);
@@ -64,12 +64,15 @@ class _UploadState extends State<Upload> {
     setState(() {
       resJson = jsonDecode(response.body);
       percentage = double.parse(resJson["prediction"]["predicted_percentage"]);
+      _loading = false;
     });
     print(resJson.runtimeType);
   }
 
-  String getPredictionText(double percentage) {
-    if (resJson != null && percentage < 50) {
+  String getPredictionText() {
+    if(resJson == null) return "What's in your net?";
+
+    if (percentage < 50) {
       return "Oops, I think you have caught an unknown species but you can try again!";
     } else if (resJson != null && percentage >= 50 && percentage < 80) {
       return "Hmm, I'm not sure but this could be a leaf from a " +
@@ -83,10 +86,9 @@ class _UploadState extends State<Upload> {
   }
 
   launchWiki(String tree) async {
-    var url = 'https://en.wikipedia.org/wiki/' + tree ;
+    var url = 'https://en.wikipedia.org/wiki/' + tree;
 
-       await launchUrlString(url);
-
+    await launchUrlString(url);
   }
 
   @override
@@ -132,30 +134,23 @@ class _UploadState extends State<Upload> {
                           ),
                         ),
                       ),
-                resJson != null
-                    ? Container(
+                Container(
                         margin: const EdgeInsets.only(top: 12),
-                        child: Text(
-                          getPredictionText(double.parse(
-                              resJson["prediction"]["predicted_percentage"])),
-                          textAlign: TextAlign.center,
-                          style:
-                              TextStyle(fontSize: 17, color: Color(0xFF0A7A81)),
-                        ),
-                      )
-                    : Container(
-                        margin: const EdgeInsets.only(top: 12),
-                        child: Text(
-                          "What's in your net?",
-                          textAlign: TextAlign.center,
-                          style:
-                              TextStyle(fontSize: 17, color: Color(0xFF0A7A81)),
-                        ),
+                        child: _loading
+                            ? CircularProgressIndicator(color: Color(0xFF0C9BA8))
+                            : Text(
+                                getPredictionText(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 17, color: Color(0xFF0A7A81)),
+                              ),
                       ),
-                resJson != null && percentage >= 50
+                resJson != null && percentage >= 50 && !_loading
                     ? Container(
+                        margin: const EdgeInsets.only(top: 12),
                         child: ElevatedButton(
-                          onPressed: () => launchWiki(resJson["prediction"]["predicted tree"]),
+                          onPressed: () => launchWiki(
+                              resJson["prediction"]["predicted tree"]),
                           style: ElevatedButton.styleFrom(
                               primary: Color(0xFF0A7A81)),
                           child: const Text('Learn More'),
