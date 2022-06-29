@@ -88,8 +88,11 @@ class _UploadState extends State<Upload> {
   launchWiki(String tree) async {
     var url = 'https://en.wikipedia.org/wiki/' + tree;
 
-    await launchUrlString(url);
+    await launchUrlString(url, mode: LaunchMode.externalApplication);
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
